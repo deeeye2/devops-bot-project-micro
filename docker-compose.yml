@@ -1,0 +1,39 @@
+version: '3'
+services:
+  auth-service:
+    image: deeeye2/devops-bot-auth:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - devops-net
+
+  registration-service:
+    image: deeeye2/devops-bot-registration:latest
+    ports:
+      - "3001:3001"
+    networks:
+      - devops-net
+
+  problem-service:
+    image: deeeye2/devops-bot-problem:latest
+    ports:
+      - "3002:3002"
+    networks:
+      - devops-net
+
+  solution-service:
+    image: deeeye2/devops-bot-solution:latest
+    ports:
+      - "3003:3003"
+    networks:
+      - devops-net
+
+  frontend:
+    image: deeeye2/devops-bot-frontend:latest
+    ports:
+      - "80:3000"
+    networks:
+      - devops-net
+
+networks:
+  devops-net:
