@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: devops-bot-pod
+spec:
+  containers:
+  - name: auth
+    image: your-dockerhub-username/auth-service:latest
+    ports:
+    - containerPort: 3000
+  - name: registration
+    image: your-dockerhub-username/registration-service:latest
+    ports:
+    - containerPort: 3001
