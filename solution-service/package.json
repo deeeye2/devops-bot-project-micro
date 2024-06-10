@@ -1,1 +1,16 @@
+{
+  "name": "solution-service",
+  "version": "1.0.0",
+  "description": "Solution Service for DevOps Bot",
+  "main": "solutionService.js",
+  "scripts": {
+    "start": "node solutionService.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.0"
+  }
+}
 
