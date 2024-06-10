@@ -1,1 +1,16 @@
+{
+  "name": "problem-service",
+  "version": "1.0.0",
+  "description": "Problem Service for DevOps Bot",
+  "main": "problemService.js",
+  "scripts": {
+    "start": "node problemService.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "sqlite3": "^5.0.0"
+  }
+}
 
