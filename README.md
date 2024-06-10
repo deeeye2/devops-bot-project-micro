@@ -48,3 +48,6 @@ devops-bot/
     ├── frontend-deployment.yaml
     └── frontend-service.yaml
 
+kubectl apply -f k8s/devops-bot-pod.yaml
+
+
