@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solution-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solution
+  template:
+    metadata:
+      labels:
+        app: solution
+    spec:
+      containers:
+        - name: solution
+          image: deeeye2/devops-bot-solution:latest
+          ports:
+            - containerPort: 3003
