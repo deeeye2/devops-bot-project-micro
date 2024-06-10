@@ -1,0 +1,5 @@
+docker push deeeye2/devops-bot-auth:latest
+docker push deeeye2/devops-bot-registration:latest
+docker push deeeye2/devops-bot-problem:latest
+docker push deeeye2/devops-bot-solution:latest
+docker push deeeye2/devops-bot-frontend:latest
