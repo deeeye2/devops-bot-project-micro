@@ -1,0 +1,5 @@
+docker build -t deeeye2/devops-bot-auth:latest .
+docker build -t deeeye2/devops-bot-registration:latest .
+docker build -t deeeye2/devops-bot-problem:latest .
+docker build -t deeeye2/devops-bot-solution:latest .
+docker build -t deeeye2/devops-bot-frontend:latest .
