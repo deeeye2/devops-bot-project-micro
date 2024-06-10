@@ -36,17 +36,22 @@ devops-bot/
 │   ├── app.js
 │   ├── package.json
 │   └── .env
-└── k8s/
-    ├── auth-deployment.yaml
-    ├── auth-service.yaml
-    ├── registration-deployment.yaml
-    ├── registration-service.yaml
-    ├── problem-deployment.yaml
-    ├── problem-service.yaml
-    ├── solution-deployment.yaml
-    ├── solution-service.yaml
-    ├── frontend-deployment.yaml
-    └── frontend-service.yaml
+├── k8s/
+│   ├── auth-deployment.yaml
+│   ├── auth-service.yaml
+│   ├── registration-deployment.yaml
+│   ├── registration-service.yaml
+│   ├── problem-deployment.yaml
+│   ├── problem-service.yaml
+│   ├── solution-deployment.yaml
+│   ├── solution-service.yaml
+│   ├── frontend-deployment.yaml
+│   └── frontend-service.yaml
+├── init_db.sql
+├── Jenkinsfile
+├── deploy.sh
+└── docker-compose.yml
+
 
 kubectl apply -f k8s/devops-bot-pod.yaml
 
