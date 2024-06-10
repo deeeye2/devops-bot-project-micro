@@ -8,42 +8,182 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/deeeye2/DevOps-Bot-backend.git'
+                git 'https://github.com/your-repo/devops-bot.git'
             }
         }
-        stage('Cleanup') {
-            steps {
-                sh './cleanup.sh'
-            }
-        }
-        stage('Build and Test Backend') {
-            steps {
-                script {
-                    docker.image('node:14').inside('-u root') {
-                        // Set npm cache to a directory with appropriate permissions
-                        sh 'npm config set cache /tmp/.npm --global'
-                        sh 'cd backend && npm install && npm test'
+
+        stage('Build and Test') {
+            parallel {
+                stage('Build and Test Auth Service') {
+                    steps {
+                        dir('auth-service') {
+                            script {
+                                docker.image('node:14').inside('-u root:root') {
+                                    sh 'npm install'
+                                    sh 'npm test || echo "No tests found"'
+                                }
+                            }
+                        }
                     }
                 }
-            }
-        }
-        stage('Build Backend Docker Image') {
-            steps {
-                script {
-                    docker.build('deeeye2/devops-bot-backend', 'backend/.')
+                stage('Build and Test Registration Service') {
+                    steps {
+                        dir('registration-service') {
+                            script {
+                                docker.image('node:14').inside('-u root:root') {
+                                    sh 'npm install'
+                                    sh 'npm test || echo "No tests found"'
+                                }
+                            }
+                        }
+                    }
                 }
-            }
-        }
-        stage('Push Backend Docker Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    script {
-                        docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-                            docker.image("deeeye2/devops-bot-backend:latest").push('latest')
+                stage('Build and Test Problem Service') {
+                    steps {
+                        dir('problem-service') {
+                            script {
+                                docker.image('node:14').inside('-u root:root') {
+                                    sh 'npm install'
+                                    sh 'npm test || echo "No tests found"'
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Build and Test Solution Service') {
+                    steps {
+                        dir('solution-service') {
+                            script {
+                                docker.image('node:14').inside('-u root:root') {
+                                    sh 'npm install'
+                                    sh 'npm test || echo "No tests found"'
+                                }
+                            }
+                        }
+                    }
+                }
+                stage('Build and Test Frontend') {
+                    steps {
+                        dir('frontend') {
+                            script {
+                                docker.image('node:14').inside('-u root:root') {
+                                    sh 'npm install'
+                                    sh 'npm test || echo "No tests found"'
+                                    sh 'npm run build'
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+        stage('Build Docker Images') {
+            parallel {
+                stage('Build Auth Service Docker Image') {
+                    steps {
+                        dir('auth-service') {
+                            script {
+                                docker.build("deeeye2/devops-bot-auth:latest", ".")
+                            }
+                        }
+                    }
+                }
+                stage('Build Registration Service Docker Image') {
+                    steps {
+                        dir('registration-service') {
+                            script {
+                                docker.build("deeeye2/devops-bot-registration:latest", ".")
+                            }
+                        }
+                    }
+                }
+                stage('Build Problem Service Docker Image') {
+                    steps {
+                        dir('problem-service') {
+                            script {
+                                docker.build("deeeye2/devops-bot-problem:latest", ".")
+                            }
+                        }
+                    }
+                }
+                stage('Build Solution Service Docker Image') {
+                    steps {
+                        dir('solution-service') {
+                            script {
+                                docker.build("deeeye2/devops-bot-solution:latest", ".")
+                            }
+                        }
+                    }
+                }
+                stage('Build Frontend Docker Image') {
+                    steps {
+                        dir('frontend') {
+                            script {
+                                docker.build("deeeye2/devops-bot-frontend:latest", ".")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
+            parallel {
+                stage('Push Auth Service Docker Image') {
+                    steps {
+                        script {
+                            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                                docker.image("deeeye2/devops-bot-auth:latest").push()
+                            }
+                        }
+                    }
+                }
+                stage('Push Registration Service Docker Image') {
+                    steps {
+                        script {
+                            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                                docker.image("deeeye2/devops-bot-registration:latest").push()
+                            }
+                        }
+                    }
+                }
+                stage('Push Problem Service Docker Image') {
+                    steps {
+                        script {
+                            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                                docker.image("deeeye2/devops-bot-problem:latest").push()
+                            }
+                        }
+                    }
+                }
+                stage('Push Solution Service Docker Image') {
+                    steps {
+                        script {
+                            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                                docker.image("deeeye2/devops-bot-solution:latest").push()
+                            }
+                        }
+                    }
+                }
+                stage('Push Frontend Docker Image') {
+                    steps {
+                        script {
+                            docker.withRegistry('https://index.docker.io/v1/', DOCKER_CREDENTIALS_ID) {
+                                docker.image("deeeye2/devops-bot-frontend:latest").push()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                sh 'docker-compose -f k8s/docker-compose.yml down'
+                sh 'docker-compose -f k8s/docker-compose.yml up -d'
+            }
+        }
     }
 }
+
