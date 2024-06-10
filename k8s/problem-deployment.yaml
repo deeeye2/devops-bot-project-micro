@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: problem-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: problem
+  template:
+    metadata:
+      labels:
+        app: problem
+    spec:
+      containers:
+        - name: problem
+          image: deeeye2/devops-bot-problem:latest
+          ports:
+            - containerPort: 3002
