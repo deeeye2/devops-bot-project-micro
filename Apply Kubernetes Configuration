@@ -1,0 +1,4 @@
+kubectl apply -f k8s/auth-deployment.yaml
+kubectl apply -f k8s/auth-service.yaml
+kubectl apply -f k8s/registration-deployment.yaml
+kubectl apply -f k8s/registration-service.yaml
